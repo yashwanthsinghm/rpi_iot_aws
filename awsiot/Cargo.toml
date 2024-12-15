@@ -1,0 +1,26 @@
+[package]
+name = "aws-iot-device-sdk-rust"
+description = "An easy to use SDK for connecting to AWS IoT Core."
+documentation = "https://docs.rs/aws-iot-device-sdk-rust"
+repository = "https://github.com/arnstein/aws-iot-device-sdk-rust"
+license = "MIT"
+version = "0.3.0"
+authors = ["Arnstein Kleven <arnsteinkleven@gmail.com>"]
+edition = "2021"
+
+[features]
+default = ["async"]
+async = ["tokio"]
+
+[dependencies]
+rumqttc = "0.15.0"
+serde_json = "1.0"
+mqtt4bytes = "0.1.6"
+tokio = { version = "1.14.0", features = ["rt-multi-thread", "sync", "macros", "net", "time", "fs"], optional = true }
+serde = { version = "1.0", features = ["derive"] }
+calamine = "0.25.0"  # Check for the latest version on crates.io
+
+
+
+
+
