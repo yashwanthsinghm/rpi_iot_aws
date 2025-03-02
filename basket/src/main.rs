@@ -27,6 +27,7 @@ impl SubFrame {
     }
 }
 
+/*
 fn parse_data(bytes: &[u8]) -> Option<Vec<SubFrame>> {
     println!("{:?}", bytes);
     if bytes.starts_with(&VALID_HEADER) {
@@ -54,8 +55,43 @@ fn parse_data(bytes: &[u8]) -> Option<Vec<SubFrame>> {
         println!("Invalid frame format.");
         None
     }
-}
+}*/
 
+
+fn parse_data(bytes: &[u8]) -> Option<Vec<SubFrame>> {
+    println!("{:?}", bytes);
+    if bytes.starts_with(&ERROR_HEADER) {
+    println!("Error frame received, ignoring.");
+        None
+       
+    } else{
+  let sub_frame_count = bytes[5] as usize;
+        let mut sub_frames = Vec::new();
+        let mut i = 6;
+
+        for _ in 0..sub_frame_count {
+            if bytes.get(i) == Some(&SUB_FRAME_START_BYTE) {
+                if let Some(data) = bytes.get(i + 1..i + 1 + SUB_FRAME_LENGTH) {
+                    sub_frames.push(SubFrame::new(data));
+                    i += 1 + SUB_FRAME_LENGTH;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        Some(sub_frames)
+}
+      
+
+
+
+
+
+
+   
+}
 fn load_excel_counts() -> HashMap<SubFrame, u32> {
     let path = "sub_frames.xlsx";
     let mut excel_counts = HashMap::new();
@@ -125,7 +161,7 @@ fn receive_packet(data: &mut [u8]) -> (&mut [u8], u8) {
     let _ = uart.set_read_mode(1, Duration::ZERO); //Duration::default()
     let cmd: [u8; 5] = [0x03, 0x50, 0x02, 0x3E, 0xC5];
     let _ = uart.write(&cmd);
-    println!("mode : {}", uart.is_read_blocking());
+    //println!("mode : {}", uart.is_read_blocking());
     let mut buffer = [0u8; 1];
     // let mut data = [0u8; 200];
     let mut i = 0;
@@ -138,33 +174,35 @@ fn receive_packet(data: &mut [u8]) -> (&mut [u8], u8) {
         //println!("len: {}", len);
         i += 1;
     }
-    while i <= len as usize {
+    while i < len as usize {
         let res = uart.read(&mut buffer).is_ok();
-        // println!("res : {} {}",res,i);
+         //println!("res : {} {}",res,i);
         // Fill the buffer variable with any incoming data.
         if res {
             //println!("Received byte: {:x?}", buffer);
             data[i] = buffer[0];
             i += 1;
-            //println!("Received byte: {}", i);
+            //println!("i: {}", i);
         }
     }
+    //println!("end of while");
     (data, len)
 }
 
 fn main() -> ! {
     let mut data = [0u8; 200];
     let mut final_data = [0u8; 200];
-
+    let mut empty_check = 0;
     let mut prev_tags = 0;
     let mut checker = 0;
 
     let mut previous_local_counts: HashMap<SubFrame, u32> = HashMap::new();
-
+    println!("before loop");
     loop {
+        data = [0u8; 200];
         let (raw_packet, tags) = receive_packet(&mut data);
-
-        if (tags > prev_tags) && (tags != 0x81) {
+        println!("Received data byte: {:x?}", raw_packet);
+        if (tags != prev_tags) && (tags != 0x81) {
             final_data.copy_from_slice(&raw_packet);
             checker = 0;
             prev_tags = tags;
@@ -184,6 +222,7 @@ fn main() -> ! {
 
 
         if let Some(sub_frames) = parse_data(&final_data) {
+            empty_check = 0;
             println!("{:?}",sub_frames);
             let mut local_counts = HashMap::new();
             
@@ -204,6 +243,17 @@ fn main() -> ! {
                 println!("Input data has not changed. No update to Excel.");
             }
         }
+        else
+           {
+
+               empty_check += 1;                 
+              if empty_check>10 {
+                    let mut local_counts = HashMap::new();
+                    let excel_counts = load_excel_counts();
+                    update_excel_if_needed(&local_counts, &excel_counts);
+                    empty_check = 0;
+                                 }
+           }
         
         sleep(Duration::from_secs(1));
     }
