@@ -63,23 +63,23 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
 async fn main() -> Result<(), Box<dyn Error>> {
     // List of Excel file paths
     let file_paths = vec![
-        "/home/iyg1kor/projects/rpi_iot_aws/rfid_parser/sub_frames.xlsx",
+        "/home/yashwanth/projects/rpi_iot_aws/awsiot/test1.xlsx",
 
     ];
 
     let aws_settings = AWSIoTSettings::new(
-        "test".to_owned(),
-        "/home/ravi/ECL2 Projects/project yashwanth/AWS_iot/AmazonRootCA1.pem".to_owned(),
-        "/home/ravi/ECL2 Projects/project yashwanth/AWS_iot/4fcec45f0562bdfe59fd9b02e6930d2bc7258358d968dd28afcb4044dd8a1c3d-certificate.pem.crt".to_owned(),
-        "/home/ravi/ECL2 Projects/project yashwanth/AWS_iot/4fcec45f0562bdfe59fd9b02e6930d2bc7258358d968dd28afcb4044dd8a1c3d-private.pem.key".to_owned(),
-        "a1zpb2m9wn3lmq-ats.iot.us-east-1.amazonaws.com".to_owned(),
+        "BasketRpi".to_owned(),
+        "/home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/AmazonRootCA1.pem".to_owned(),
+        "/home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-certificate.pem.crt".to_owned(), ///home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-certificate.pem.crt
+        "/home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-private.pem.key".to_owned(), ///home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-private.pem.key
+        "awxgr2joem983-ats.iot.eu-north-1.amazonaws.com".to_owned(), // awxgr2joem983-ats.iot.eu-north-1.amazonaws.com
         None,
     );
 
     let (iot_core_client, eventloop_stuff) = AWSIoTAsyncClient::new(aws_settings).await.unwrap();
 
-    iot_core_client.subscribe("test1234".to_string(), QoS::AtMostOnce).await.unwrap();
-    iot_core_client.publish("test1234".to_string(), QoS::AtMostOnce, "hey").await.unwrap();
+    iot_core_client.subscribe("baskettp1".to_string(), QoS::AtMostOnce).await.unwrap();
+    iot_core_client.publish("baskettp1".to_string(), QoS::AtMostOnce, "hey").await.unwrap();
 
     let mut receiver1 = iot_core_client.get_receiver().await;
 
