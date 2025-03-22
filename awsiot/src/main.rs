@@ -35,7 +35,7 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
                     let message = Message {  value, count };
                     let json_message = serde_json::to_string(&message)?;
 
-                    match iot_core_client.publish("test1234".to_string(), QoS::AtMostOnce, &*json_message).await {
+                    match iot_core_client.publish("basket".to_string(), QoS::AtMostOnce, &*json_message).await {
                         Ok(_) => println!("Message published successfully"),
                         Err(e) => println!("Error publishing message: {:?}", e),
                     }
@@ -63,23 +63,23 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
 async fn main() -> Result<(), Box<dyn Error>> {
     // List of Excel file paths
     let file_paths = vec![
-        "/home/yashwanth/projects/rpi_iot_aws/awsiot/test1.xlsx",
+        "test1.xlsx",
 
     ];
 
     let aws_settings = AWSIoTSettings::new(
-        "BasketRpi".to_owned(),
-        "/home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/AmazonRootCA1.pem".to_owned(),
-        "/home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-certificate.pem.crt".to_owned(), ///home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-certificate.pem.crt
-        "/home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-private.pem.key".to_owned(), ///home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-private.pem.key
-        "awxgr2joem983-ats.iot.eu-north-1.amazonaws.com".to_owned(), // awxgr2joem983-ats.iot.eu-north-1.amazonaws.com
-        None,
+        "basket".to_owned(),
+        "certificate/AmazonRootCA1.pem".to_owned(),
+        "certificate/8d2d2aeebf8929b8cefd41847f35f9b6d67005c5a2d793251bf18c41fee23da4-certificate.pem.crt".to_owned(), ///home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-certificate.pem.crt
+        "certificate/8d2d2aeebf8929b8cefd41847f35f9b6d67005c5a2d793251bf18c41fee23da4-private.pem.key".to_owned(), ///home/yashwanth/projects/rpi_iot_aws/awsiot/certificate/d60e0323f6950461c52cce6502a49cf2f91476675b32e271e2ecbc3e7db73f29-private.pem.key
+        "awxgr2joem983-ats.iot.ap-south-1.amazonaws.com".to_owned(), // awxgr2joem983-ats.iot.eu-north-1.amazonaws.com
+        None,//ping awxgr2joem983-ats.iot.ap-south-1.amazonaws.com
     );
 
     let (iot_core_client, eventloop_stuff) = AWSIoTAsyncClient::new(aws_settings).await.unwrap();
 
-    iot_core_client.subscribe("baskettp1".to_string(), QoS::AtMostOnce).await.unwrap();
-    iot_core_client.publish("baskettp1".to_string(), QoS::AtMostOnce, "hey").await.unwrap();
+    iot_core_client.subscribe("basket".to_string(), QoS::AtMostOnce).await.unwrap();
+    iot_core_client.publish("basket".to_string(), QoS::AtMostOnce, "hey").await.unwrap();
 
     let mut receiver1 = iot_core_client.get_receiver().await;
 
