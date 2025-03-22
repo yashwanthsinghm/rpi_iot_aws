@@ -65,9 +65,9 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 # Set the path to your CA certificate, client certificate, and private key
-ca_path = "pythonec2/certificate/AmazonRootCA1.pem"
-cert_path = "pythonec2/certificate/8d2d2aeebf8929b8cefd41847f35f9b6d67005c5a2d793251bf18c41fee23da4-certificate.pem.crt"
-key_path = "pythonec2/certificate/8d2d2aeebf8929b8cefd41847f35f9b6d67005c5a2d793251bf18c41fee23da4-private.pem.key"
+ca_path = "certificate/AmazonRootCA1.pem"
+cert_path = "certificate/8d2d2aeebf8929b8cefd41847f35f9b6d67005c5a2d793251bf18c41fee23da4-certificate.pem.crt"
+key_path = "certificate/8d2d2aeebf8929b8cefd41847f35f9b6d67005c5a2d793251bf18c41fee23da4-private.pem.key"
 
 client.tls_set(ca_certs=ca_path, certfile=cert_path, keyfile=key_path)
 
