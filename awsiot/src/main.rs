@@ -20,7 +20,7 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     // Specify the sheet name
-    let sheet_name = "Sheet1"; // Replace with your sheet name
+    let sheet_name = "SubFrame Data"; // Replace with your sheet name ///home/yashwanth/Desktop/rpi_iot_aws/basket/sub_frames.xlsx
 
     // Read data from the Excel sheet
     match workbook.worksheet_range(sheet_name) {
@@ -29,7 +29,7 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
             for row in range.rows() {
                 if row.len() >= 2 {
                     //let username = row[3].to_string();
-                    let count = row[2].to_string();
+                    let count = row[1].to_string();
                     //let sensor_id = row[1].to_string();
                     let value = row[0].to_string();
                     let message = Message {  value, count };
@@ -63,7 +63,7 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
 async fn main() -> Result<(), Box<dyn Error>> {
     // List of Excel file paths
     let file_paths = vec![
-        "test1.xlsx",
+        "/home/yashwanth/Desktop/rpi_iot_aws/basket/sub_frames.xlsx",
 
     ];
 
