@@ -1,27 +1,29 @@
-
 use aws_iot_device_sdk_rust::{async_event_loop_listener, AWSIoTAsyncClient, AWSIoTSettings};
+use calamine::{open_workbook, Data, Reader, Xlsx, XlsxError};
 use rumqttc::{self, Packet, QoS};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
-use calamine::{open_workbook, Data, Reader, Xlsx, XlsxError};
+use std::{collections::HashMap, error::Error};
 use tokio::time::{sleep, Duration};
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     value: String,
-   // sensor_id: String,
+    // sensor_id: String,
     count: String,
     //username:String,
-
 }
 
-async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> Result<(), Box<dyn Error>> {
+async fn publish_excel_data(
+    mut prev_basket_data: HashMap<String, String>,
+    iot_core_client: &AWSIoTAsyncClient,
+    path: &str,
+) -> Result<HashMap<String, String>, Box<dyn Error>> {
     // Open the workbook
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     // Specify the sheet name
     let sheet_name = "SubFrame Data"; // Replace with your sheet name ///home/yashwanth/Desktop/rpi_iot_aws/basket/sub_frames.xlsx
-
+    let mut publish = false;
     // Read data from the Excel sheet
     match workbook.worksheet_range(sheet_name) {
         Ok(range) => {
@@ -32,12 +34,29 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
                     let count = row[1].to_string();
                     //let sensor_id = row[1].to_string();
                     let value = row[0].to_string();
-                    let message = Message {  value, count };
-                    let json_message = serde_json::to_string(&message)?;
 
-                    match iot_core_client.publish("basket".to_string(), QoS::AtMostOnce, &*json_message).await {
-                        Ok(_) => println!("Message published successfully"),
-                        Err(e) => println!("Error publishing message: {:?}", e),
+                    let value1 = row[0].to_string();
+                    let count1 = row[1].to_string();
+                    if prev_basket_data.contains_key(&value1) {
+                        if !prev_basket_data.get(&value1).unwrap().contains(&count1) {
+                            publish = true;
+                        }
+                    } else {
+                        publish = true;
+                    }
+
+                    if publish {
+                        prev_basket_data.insert(value1, count1);
+                        let message = Message { value, count };
+                        let json_message = serde_json::to_string(&message)?;
+
+                        match iot_core_client
+                            .publish("basket".to_string(), QoS::AtMostOnce, &*json_message)
+                            .await
+                        {
+                            Ok(_) => println!("Message published successfully"),
+                            Err(e) => println!("Error publishing message: {:?}", e),
+                        }
                     }
                 }
             }
@@ -56,16 +75,13 @@ async fn publish_excel_data(iot_core_client: &AWSIoTAsyncClient, path: &str) -> 
         }
     }
 
-    Ok(())
+    Ok(prev_basket_data)
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // List of Excel file paths
-    let file_paths = vec![
-        "/home/yashwanth/Desktop/rpi_iot_aws/basket/sub_frames.xlsx",
-
-    ];
+    let file_paths = vec!["../basket/sub_frames.xlsx"];
 
     let aws_settings = AWSIoTSettings::new(
         "basket".to_owned(),
@@ -78,34 +94,42 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let (iot_core_client, eventloop_stuff) = AWSIoTAsyncClient::new(aws_settings).await.unwrap();
 
-    iot_core_client.subscribe("basket".to_string(), QoS::AtMostOnce).await.unwrap();
-    iot_core_client.publish("basket".to_string(), QoS::AtMostOnce, "hey").await.unwrap();
+    iot_core_client
+        .subscribe("basket".to_string(), QoS::AtMostOnce)
+        .await
+        .unwrap();
+    iot_core_client
+        .publish("basket".to_string(), QoS::AtMostOnce, "hey")
+        .await
+        .unwrap();
 
     let mut receiver1 = iot_core_client.get_receiver().await;
 
     let publish = tokio::spawn(async move {
+        let mut prev_basket_data = HashMap::new();
         loop {
             for path in &file_paths {
-                match publish_excel_data(&iot_core_client, path).await {
-                    Ok(_) => println!("Data from {} published successfully", path),
+                match publish_excel_data(prev_basket_data.clone(), &iot_core_client, path).await {
+                    Ok(current_basket_data) => {
+                        println!("Data from {} published successfully", path);
+                        prev_basket_data = current_basket_data;
+                    }
                     Err(e) => println!("Error publishing data from {}: {:?}", path, e),
                 }
             }
             sleep(Duration::from_secs(5)).await; // Add a delay to avoid rapid continuous publishing
         }
     });
-    
+
     let recv1_thread = tokio::spawn(async move {
         loop {
             match receiver1.recv().await {
-                Ok(event) => {
-                    match event {
-                        Packet::Publish(p) => {
-                            println!("Received message {:?} on topic: {}", p.payload, p.topic)
-                        }
-                        _ => println!("Got event on receiver1: {:?}", event),
+                Ok(event) => match event {
+                    Packet::Publish(p) => {
+                        println!("Received message {:?} on topic: {}", p.payload, p.topic)
                     }
-                }
+                    _ => println!("Got event on receiver1: {:?}", event),
+                },
                 Err(e) => {
                     println!("Error receiving message: {:?}", e);
                 }
@@ -117,12 +141,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         async_event_loop_listener(eventloop_stuff).await.unwrap();
     });
 
-    tokio::join!(
-        recv1_thread, 
-        listen_thread,
-        publish
-
-    );
+    tokio::join!(recv1_thread, listen_thread, publish);
 
     Ok(())
 }
