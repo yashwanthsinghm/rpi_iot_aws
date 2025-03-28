@@ -10,7 +10,7 @@ pub struct Message {
     value: String,
     // sensor_id: String,
     count: String,
-    //username:String,
+    status: String,
 }
 
 async fn publish_excel_data(
@@ -20,10 +20,12 @@ async fn publish_excel_data(
 ) -> Result<HashMap<String, String>, Box<dyn Error>> {
     // Open the workbook
     let mut workbook: Xlsx<_> = open_workbook(path)?;
-
+    let mut current_basket_data = HashMap::new();
     // Specify the sheet name
     let sheet_name = "SubFrame Data"; // Replace with your sheet name ///home/yashwanth/Desktop/rpi_iot_aws/basket/sub_frames.xlsx
     let mut publish = false;
+   
+
     // Read data from the Excel sheet
     match workbook.worksheet_range(sheet_name) {
         Ok(range) => {
@@ -37,6 +39,10 @@ async fn publish_excel_data(
 
                     let value1 = row[0].to_string();
                     let count1 = row[1].to_string();
+
+                    let value2 = row[0].to_string();
+                    let count2 = row[1].to_string();
+                    current_basket_data.insert(value2, count2);
                     if prev_basket_data.contains_key(&value1) {
                         if !prev_basket_data.get(&value1).unwrap().contains(&count1) {
                             publish = true;
@@ -46,8 +52,13 @@ async fn publish_excel_data(
                     }
 
                     if publish {
+                        let mut added = "add".to_string();
                         prev_basket_data.insert(value1, count1);
-                        let message = Message { value, count };
+                        let message = Message {
+                            value,
+                            count,
+                            status: added,
+                        };
                         let json_message = serde_json::to_string(&message)?;
 
                         match iot_core_client
@@ -56,6 +67,26 @@ async fn publish_excel_data(
                         {
                             Ok(_) => println!("Message published successfully"),
                             Err(e) => println!("Error publishing message: {:?}", e),
+                        }
+                    }
+                    for (ID, COUNT) in prev_basket_data.clone() {
+                        if current_basket_data.get_key_value(&ID).is_none() {
+                            prev_basket_data.remove(&ID);
+                            let deleted = "removed".to_string();
+                            let message = Message {
+                                value: ID,
+                                count: COUNT,
+                                status: deleted,
+                            };
+                            let json_message = serde_json::to_string(&message)?;
+
+                            match iot_core_client
+                                .publish("basket".to_string(), QoS::AtMostOnce, &*json_message)
+                                .await
+                            {
+                                Ok(_) => println!("Message published successfully"),
+                                Err(e) => println!("Error publishing message: {:?}", e),
+                            }
                         }
                     }
                 }
