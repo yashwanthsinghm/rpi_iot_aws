@@ -203,7 +203,7 @@ fn main() -> ! {
         let (raw_packet, tags) = receive_packet(&mut data);
         println!("Received data byte: {:x?}", raw_packet);
         if (tags != prev_tags) && (tags != 0x81) {
-            final_data.copy_from_slice(&raw_packet);
+           // final_data.copy_from_slice(&raw_packet);
             checker = 0;
             prev_tags = tags;
         } else {
@@ -212,13 +212,14 @@ fn main() -> ! {
                 final_data.copy_from_slice(&raw_packet);
                 checker = 0;
                 prev_tags = tags;
+                println!("Received final data byte: {:x?}", final_data);
             } else if (checker > 10) && (tags == 0x81) {
                 final_data = [0u8; 200];
                 checker = 0;
             }
         }
-        println!("Received data byte: {:x?}", raw_packet);
-        println!("Received final data byte: {:x?}", final_data);
+        //println!("Received data byte: {:x?}", raw_packet);
+        
 
 
         if let Some(sub_frames) = parse_data(&final_data) {
@@ -234,6 +235,7 @@ fn main() -> ! {
             println!("{:?}", local_counts);
             // Load the current Excel counts
             let excel_counts = load_excel_counts();
+            println!("excel = {:?},local_counts ={:?},previous_local_counts = {:?}",excel_counts,local_counts,previous_local_counts );
 
             // Only update if the counts have changed (comparing current and previous counts)
             if local_counts != previous_local_counts {
@@ -251,10 +253,12 @@ fn main() -> ! {
                     let mut local_counts = HashMap::new();
                     let excel_counts = load_excel_counts();
                     update_excel_if_needed(&local_counts, &excel_counts);
+                    previous_local_counts = local_counts.clone();
                     empty_check = 0;
+                    sleep(Duration::from_millis(1000));
                                  }
            }
         
-        sleep(Duration::from_secs(1));
+         sleep(Duration::from_millis(100));
     }
 }

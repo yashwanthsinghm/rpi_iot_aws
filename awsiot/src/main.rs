@@ -69,6 +69,8 @@ async fn publish_excel_data(
                             Err(e) => println!("Error publishing message: {:?}", e),
                         }
                     }
+                }
+            }
                     for (ID, COUNT) in prev_basket_data.clone() {
                         if current_basket_data.get_key_value(&ID).is_none() {
                             prev_basket_data.remove(&ID);
@@ -88,8 +90,8 @@ async fn publish_excel_data(
                                 Err(e) => println!("Error publishing message: {:?}", e),
                             }
                         }
-                    }
-                }
+                    
+                
             }
 
             // Provide some statistics
@@ -112,7 +114,7 @@ async fn publish_excel_data(
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // List of Excel file paths
-    let file_paths = vec!["../basket/sub_frames.xlsx"];
+    let file_paths = vec!["/home/yashwanth/Desktop/test2/rpi_iot_aws/basket/sub_frames.xlsx"];
 
     let aws_settings = AWSIoTSettings::new(
         "basket".to_owned(),
