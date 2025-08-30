@@ -192,9 +192,10 @@ fn receive_packet(data: &mut [u8]) -> (&mut [u8], u8) {
 fn main() -> ! {
     let mut data = [0u8; 200];
     let mut final_data = [0u8; 200];
-    let mut empty_check = 0;
+
     let mut prev_tags = 0;
     let mut checker = 0;
+    let mut invalid_packet=0;
 
     let mut previous_local_counts: HashMap<SubFrame, u32> = HashMap::new();
     println!("before loop");
@@ -202,29 +203,40 @@ fn main() -> ! {
         data = [0u8; 200];
         let (raw_packet, tags) = receive_packet(&mut data);
         println!("Received data byte: {:x?}", raw_packet);
-        if (tags != prev_tags) && (tags != 0x81) {
+        println!("checker: {},tags :{}", checker,tags);
+        if (tags != prev_tags) && (tags > 0x07) {
            // final_data.copy_from_slice(&raw_packet);
             checker = 0;
+            invalid_packet = 0;
             prev_tags = tags;
-        } else {
+        } 
+        else if (tags == prev_tags) && (tags > 0x07){
             checker += 1;
-            if (checker > 10) && (tags != 0x81) {
+            if (checker > 3){
                 final_data.copy_from_slice(&raw_packet);
                 checker = 0;
                 prev_tags = tags;
                 println!("Received final data byte: {:x?}", final_data);
-            } else if (checker > 10) && (tags == 0x81) {
-                final_data = [0u8; 200];
-                checker = 0;
-            }
+                            }
         }
+        else if (tags == 0x7) {
+            println!("invalid_packet: {}", invalid_packet);
+            invalid_packet += 1;
+           // empty_check += 1;
+            if (invalid_packet  > 10)  {
+                final_data = [0u8; 200];
+               invalid_packet = 0;
+                
+            }
+            }
         //println!("Received data byte: {:x?}", raw_packet);
         
 
-
+        if tags != 0x07{
         if let Some(sub_frames) = parse_data(&final_data) {
-            empty_check = 0;
-            println!("{:?}",sub_frames);
+            //empty_check = 0;
+             
+            println!("sub frames {:?}",sub_frames);
             let mut local_counts = HashMap::new();
             
             // Count all subframes in the current data
@@ -232,7 +244,7 @@ fn main() -> ! {
                 *local_counts.entry(frame).or_insert(0) += 1;
             }
 
-            println!("{:?}", local_counts);
+            println!("local counts {:?}", local_counts);
             // Load the current Excel counts
             let excel_counts = load_excel_counts();
             println!("excel = {:?},local_counts ={:?},previous_local_counts = {:?}",excel_counts,local_counts,previous_local_counts );
@@ -245,20 +257,21 @@ fn main() -> ! {
                 println!("Input data has not changed. No update to Excel.");
             }
         }
-        else
-           {
-
-               empty_check += 1;                 
-              if empty_check>10 {
+          }
+          else
+          {       
+              if invalid_packet >= 10 {
+                  println!(" inside else invalid_packet: {}", invalid_packet);
                     let mut local_counts = HashMap::new();
                     let excel_counts = load_excel_counts();
                     update_excel_if_needed(&local_counts, &excel_counts);
                     previous_local_counts = local_counts.clone();
-                    empty_check = 0;
-                    sleep(Duration::from_millis(1000));
+                    sleep(Duration::from_millis(10));
                                  }
-           }
+        }
         
          sleep(Duration::from_millis(100));
+         
     }
 }
+
