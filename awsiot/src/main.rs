@@ -4,13 +4,16 @@ use rumqttc::{self, Packet, QoS};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, error::Error};
 use tokio::time::{sleep, Duration};
+use rppal::gpio::{Gpio, Level, Mode, PullUpDown, InputPin};
+use std::thread;
+//use std::time::Duration;
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     value: String,
-    // sensor_id: String,
     count: String,
     status: String,
+    cart_id: String,
 }
 
 async fn publish_excel_data(
@@ -25,6 +28,9 @@ async fn publish_excel_data(
     let sheet_name = "SubFrame Data"; // Replace with your sheet name ///home/yashwanth/Desktop/rpi_iot_aws/basket/sub_frames.xlsx
     let mut publish = false;
    
+    let gpio = Gpio::new().unwrap();
+    let mut pin_red = gpio.get(17).unwrap().into_output();
+    let mut pin_green = gpio.get(18).unwrap().into_output();
 
     // Read data from the Excel sheet
     match workbook.worksheet_range(sheet_name) {
@@ -35,6 +41,7 @@ async fn publish_excel_data(
                     //let username = row[3].to_string();
                     let count = row[1].to_string();
                     //let sensor_id = row[1].to_string();
+                    let cart_id = "cart-1".to_string();
                     let value = row[0].to_string();
 
                     let value1 = row[0].to_string();
@@ -53,14 +60,23 @@ async fn publish_excel_data(
 
                     if publish {
                         let mut added = "add".to_string();
+                         pin_green.set_low();
                         prev_basket_data.insert(value1, count1);
                         let message = Message {
                             value,
                             count,
                             status: added,
+                            cart_id,
                         };
                         let json_message = serde_json::to_string(&message)?;
-
+                       
+                        //pin_green.set_mode(Mode::Output);
+                        //pin_green.write(Level::High);
+                     
+                        //let mut pin_green = gpio.get(18)?.into_input_pulldown();
+                        // pin_green.set_pullupdown(PullUpDown::PullDown);
+                         //  sleep(Duration::from_secs(1));
+                        
                         match iot_core_client
                             .publish("basket".to_string(), QoS::AtMostOnce, &*json_message)
                             .await
@@ -68,20 +84,25 @@ async fn publish_excel_data(
                             Ok(_) => println!("Message published successfully"),
                             Err(e) => println!("Error publishing message: {:?}", e),
                         }
+                        thread::sleep(Duration::from_millis(1000));
+                        pin_green.set_high();
+               
                     }
                 }
             }
                     for (ID, COUNT) in prev_basket_data.clone() {
                         if current_basket_data.get_key_value(&ID).is_none() {
                             prev_basket_data.remove(&ID);
-                            let deleted = "removed".to_string();
+                            let deleted = "remove".to_string();
+                             pin_red.set_low();
+                            let cart_id = "cart-1".to_string();
                             let message = Message {
                                 value: ID,
                                 count: COUNT,
                                 status: deleted,
+                                cart_id,
                             };
                             let json_message = serde_json::to_string(&message)?;
-
                             match iot_core_client
                                 .publish("basket".to_string(), QoS::AtMostOnce, &*json_message)
                                 .await
@@ -89,6 +110,10 @@ async fn publish_excel_data(
                                 Ok(_) => println!("Message published successfully"),
                                 Err(e) => println!("Error publishing message: {:?}", e),
                             }
+                            thread::sleep(Duration::from_millis(1000));
+                            pin_red.set_high();
+
+
                         }
                     
                 
@@ -131,10 +156,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .subscribe("basket".to_string(), QoS::AtMostOnce)
         .await
         .unwrap();
-    iot_core_client
-        .publish("basket".to_string(), QoS::AtMostOnce, "hey")
-        .await
-        .unwrap();
+   // iot_core_client
+     //   .publish("basket".to_string(), QoS::AtMostOnce, "hey")
+       // .await
+        //.unwrap();
 
     let mut receiver1 = iot_core_client.get_receiver().await;
 
@@ -150,7 +175,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     Err(e) => println!("Error publishing data from {}: {:?}", path, e),
                 }
             }
-            sleep(Duration::from_secs(5)).await; // Add a delay to avoid rapid continuous publishing
+            sleep(Duration::from_secs(1)).await; // Add a delay to avoid rapid continuous publishing
         }
     });
 
