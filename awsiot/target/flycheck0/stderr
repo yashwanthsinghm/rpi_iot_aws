@@ -1,0 +1,135 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   0.113288956s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws_iot_device_sdk_rust"}: cargo::core::compiler::fingerprint: fingerprint error for aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("aws_iot_device_sdk_rust", ["lib"], "/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/src/lib.rs", Edition2021) }
+   0.113327224s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws_iot_device_sdk_rust"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/target/debug/.fingerprint/aws-iot-device-sdk-rust-d15dbcc62773d73b/lib-aws_iot_device_sdk_rust`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   0.122501564s  INFO prepare_target{force=false package_id=rppal v0.13.1 target="rppal"}: cargo::core::compiler::fingerprint: fingerprint error for rppal v0.13.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rppal", ["lib"], "/Users/yashwanthsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rppal-0.13.1/src/lib.rs", Edition2018) }
+   0.122517480s  INFO prepare_target{force=false package_id=rppal v0.13.1 target="rppal"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/target/debug/.fingerprint/rppal-0382c99af481e480/lib-rppal`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+  19: <unknown>
+   0.128117994s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws_iot_device_sdk_rust"}: cargo::core::compiler::fingerprint: fingerprint error for aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("aws_iot_device_sdk_rust", ["lib"], "/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/src/lib.rs", Edition2021) }
+   0.128134011s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws_iot_device_sdk_rust"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/target/debug/.fingerprint/aws-iot-device-sdk-rust-b19832d814afbc7f/test-lib-aws_iot_device_sdk_rust`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   0.128690117s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws-iot-device-sdk-rust"}: cargo::core::compiler::fingerprint: fingerprint error for aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot)/Check { test: false }/TargetInner { name: "aws-iot-device-sdk-rust", doc: true, ..: with_path("/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/src/main.rs", Edition2021) }
+   0.128704254s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws-iot-device-sdk-rust"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/target/debug/.fingerprint/aws-iot-device-sdk-rust-a91da67663e2d2e0/bin-aws-iot-device-sdk-rust`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   0.129219617s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws-iot-device-sdk-rust"}: cargo::core::compiler::fingerprint: fingerprint error for aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot)/Check { test: true }/TargetInner { name: "aws-iot-device-sdk-rust", doc: true, ..: with_path("/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/src/main.rs", Edition2021) }
+   0.129230093s  INFO prepare_target{force=false package_id=aws-iot-device-sdk-rust v0.3.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot) target="aws-iot-device-sdk-rust"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/awsiot/target/debug/.fingerprint/aws-iot-device-sdk-rust-863cb430ef310dd0/test-bin-aws-iot-device-sdk-rust`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+    Checking rppal v0.13.1
+error: could not compile `rppal` (lib) due to 101 previous errors

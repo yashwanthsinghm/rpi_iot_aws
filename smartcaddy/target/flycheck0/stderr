@@ -1,0 +1,81 @@
+   0.126067626s  INFO prepare_target{force=false package_id=smartcaddy v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy) target="smartcaddy"}: cargo::core::compiler::fingerprint: fingerprint error for smartcaddy v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy)/Check { test: false }/TargetInner { name: "smartcaddy", doc: true, ..: with_path("/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy/src/main.rs", Edition2024) }
+   0.126107130s  INFO prepare_target{force=false package_id=smartcaddy v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy) target="smartcaddy"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy/target/debug/.fingerprint/smartcaddy-41a7f5dc9f8f848b/bin-smartcaddy`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   0.146349070s  INFO prepare_target{force=false package_id=rppal v0.13.1 target="rppal"}: cargo::core::compiler::fingerprint: fingerprint error for rppal v0.13.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rppal", ["lib"], "/Users/yashwanthsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rppal-0.13.1/src/lib.rs", Edition2018) }
+   0.146372213s  INFO prepare_target{force=false package_id=rppal v0.13.1 target="rppal"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy/target/debug/.fingerprint/rppal-c52174b270e5e5ed/lib-rppal`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+  19: <unknown>
+   0.146980627s  INFO prepare_target{force=false package_id=smartcaddy v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy) target="smartcaddy"}: cargo::core::compiler::fingerprint: fingerprint error for smartcaddy v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy)/Check { test: true }/TargetInner { name: "smartcaddy", doc: true, ..: with_path("/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy/src/main.rs", Edition2024) }
+   0.146993586s  INFO prepare_target{force=false package_id=smartcaddy v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy) target="smartcaddy"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/smartcaddy/target/debug/.fingerprint/smartcaddy-8b16325bfcaf7829/test-bin-smartcaddy`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+    Checking rppal v0.13.1
+error: could not compile `rppal` (lib) due to 101 previous errors

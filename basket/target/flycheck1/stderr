@@ -1,0 +1,83 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   0.068264639s  INFO prepare_target{force=false package_id=basket v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket) target="basket"}: cargo::core::compiler::fingerprint: fingerprint error for basket v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket)/Check { test: false }/TargetInner { name: "basket", doc: true, ..: with_path("/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket/src/main.rs", Edition2021) }
+   0.068297806s  INFO prepare_target{force=false package_id=basket v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket) target="basket"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket/target/debug/.fingerprint/basket-3ae2eb0ef72a51d1/bin-basket`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   0.076102175s  INFO prepare_target{force=false package_id=rppal v0.13.1 target="rppal"}: cargo::core::compiler::fingerprint: fingerprint error for rppal v0.13.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rppal", ["lib"], "/Users/yashwanthsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rppal-0.13.1/src/lib.rs", Edition2018) }
+   0.076121872s  INFO prepare_target{force=false package_id=rppal v0.13.1 target="rppal"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket/target/debug/.fingerprint/rppal-818b45517a7fe262/lib-rppal`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+  19: <unknown>
+   0.077251490s  INFO prepare_target{force=false package_id=basket v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket) target="basket"}: cargo::core::compiler::fingerprint: fingerprint error for basket v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket)/Check { test: true }/TargetInner { name: "basket", doc: true, ..: with_path("/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket/src/main.rs", Edition2021) }
+   0.077263987s  INFO prepare_target{force=false package_id=basket v0.1.0 (/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket) target="basket"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/yashwanthsingh/yash/projects_1/rpi_iot_aws/basket/target/debug/.fingerprint/basket-706007a00fa2856e/test-bin-basket`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+    Checking rppal v0.13.1
+error: could not compile `rppal` (lib) due to 101 previous errors
