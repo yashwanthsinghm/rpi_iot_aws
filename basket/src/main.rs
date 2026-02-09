@@ -142,7 +142,7 @@ fn update_excel_if_needed(
                 sw.append_row(row!["SubFrame", "Count"])?;
 
                 for (sub_frame, count) in local_counts {
-                    sw.append_row(row![format!("{:x?}", sub_frame.data), count.to_string()])?;
+                    sw.append_row(row![parse_hex_string2(&format!("{:x?}", sub_frame.data)), count.to_string()])?;
                 }
                 Ok(())
             })
@@ -187,6 +187,10 @@ fn receive_packet(data: &mut [u8]) -> (&mut [u8], u8) {
     }
     //println!("end of while");
     (data, len)
+}
+
+fn parse_hex_string2(input: &str) -> String {
+    input.trim_matches(|c| c == '[' || c == ']').split(',').map(|s| s.trim()).collect::<Vec<&str>>().join("")
 }
 
 fn main() -> ! {
