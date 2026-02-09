@@ -4,7 +4,7 @@ use calamine::{Data, Reader, Xlsx, XlsxError, open_workbook};
 use reqwest;
 use rppal::gpio::{Gpio, InputPin, Level, Mode, PullUpDown};
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, error::Error};
+use std::{collections::HashMap, error::Error, thread};
 use tokio::time::{Duration, sleep};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -74,23 +74,27 @@ async fn publish_excel_data(
 
     let gpio = Gpio::new().unwrap();
     let mut pin_red = gpio.get(17).unwrap().into_output();
-    let mut pin_green = gpio.get(18).unwrap().into_output();
+    let mut pin_green = gpio.get(23).unwrap().into_output();
+    pin_green.set_high();
+    pin_red.set_high();
 
-    // Read data from the Excel sheet
+    // Read data from the Excel sheet added test code
+                        //remove till here
     match workbook.worksheet_range(sheet_name) {
         Ok(range) => {
             println!("Data in '{}':", sheet_name);
             for row in range.rows() {
-                if row.len() >= 2 {
+                println!("line 84 {:?}",row);
+                if row.len() >= 2 && !row[1].to_string().contains("Count") {
                     //let username = row[3].to_string();
+                 
                     let mut AddorRemove = String::from("None");
                     let mut quantity = 0;
                     let value = row[0].to_string();
+                    let count = row[1].to_string();
                     let count = row[1].to_string().parse::<i32>().unwrap();
-
                     let value1 = row[0].to_string();
                     let count1 = row[1].to_string();
-
                     let value2 = row[0].to_string();
                     let count2 = row[1].to_string();
                     current_basket_data.insert(value2, count2);
@@ -105,30 +109,45 @@ async fn publish_excel_data(
                             if quantity > count {
                                 quantity = quantity - count;
                                 AddorRemove = String::from("REMOVE");
+                                 
                             } else {
                                 quantity = count - quantity;
                                 AddorRemove = String::from("ADD");
+                                 
                             }
                             publish = true;
                         }
                     } else {
+                        AddorRemove = String::from("ADD");
                         quantity = count;
                         publish = true;
+                       
                     }
-
+println!("quantity {}",quantity);
                     if publish {
                         publish = false;
-                        pin_green.set_low();
+                        pin_green.set_high();
                         prev_basket_data.insert(value1, count1);
-
+                        println!("value {:?}",&value);
+println!("line {:?}",&AddorRemove);
+                        if AddorRemove.contains("ADD")
+                        {
+                              pin_green.set_low();
+                              println!("green");
+                        }
+                        else
+                        {
+                            pin_red.set_low();
+                            }
+                             
                         match send_rfid_request_async("CART001", &value, &AddorRemove, quantity)
                             .await
                         {
                             Ok(response) => {
                                 println!("✓ Success!");
                                 println!("Response: {}", response);
-                                thread::sleep(Duration::from_millis(1000));
-                                pin_green.set_high();
+                                thread::sleep(Duration::from_millis(100));
+                               
                             }
                             Err(e) => {
                                 eprintln!("✗ Error: {}", e);
@@ -147,8 +166,8 @@ async fn publish_excel_data(
                         Ok(response) => {
                             println!("✓ Success!");
                             println!("Response: {}", response);
-                            thread::sleep(Duration::from_millis(1000));
-                            pin_red.set_high();
+                            thread::sleep(Duration::from_millis(100));
+                           //pin_green.set_low(); 
                         }
                         Err(e) => {
                             eprintln!("✗ Error: {}", e);
@@ -176,6 +195,7 @@ async fn publish_excel_data(
     Ok(prev_basket_data)
 }
 
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // List of Excel file paths
@@ -183,6 +203,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let mut prev_basket_data = HashMap::new();
     loop {
+        
+   
         for path in &file_paths {
             match publish_excel_data(prev_basket_data.clone(), path).await {
                 Ok(current_basket_data) => {
