@@ -29,8 +29,17 @@ async fn publish_excel_data(
     let mut publish = false;
    
     let gpio = Gpio::new().unwrap();
-    let mut pin_red = gpio.get(17).unwrap().into_output();
-    let mut pin_green = gpio.get(18).unwrap().into_output();
+    let mut pin_red = gpio.get(17).unwrap().into_output();//3
+    let mut pin_green = gpio.get(23).unwrap().into_output();//2//18   
+    let mut charging_pin = gpio.get(18).unwrap().into_input();//input from charger
+    let mut power_led = gpio.get(27).unwrap().into_output();//charger indication led
+
+          if charging_pin.is_high() {
+           power_led.set_high();
+        }
+        else {
+                 power_led.set_low();
+        }
 
     // Read data from the Excel sheet
     match workbook.worksheet_range(sheet_name) {
