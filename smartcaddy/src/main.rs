@@ -150,8 +150,15 @@ println!("line {:?}",&AddorRemove);
                                
                             }
                             Err(e) => {
+                           if e.to_string().contains("payment done") {
+                                    println!("✓ Payment done, cart is ready for checkout!");
+                                    thread::sleep(Duration::from_millis(1000));
+                                   std::process::Command::new("shutdown").arg("-h").arg("now").status().unwrap();
+
+                                }
+                                else {
                                 eprintln!("✗ Error: {}", e);
-                                std::process::exit(1);
+                                std::process::exit(1);}
                             }
                         }
                     }
